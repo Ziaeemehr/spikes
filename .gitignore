@@ -1,0 +1,76 @@
+# Byte-compiled files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Distribution and build artifacts
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environment
+venv/
+env/
+*.venv
+
+# IDE and editor specific files
+.vscode/
+.idea/
+*.suo
+*.ntvs_analysis.dat
+*.ncb
+*.sdf
+*.opensdf
+*.swp
+*.swo
+
+*.txt
+*.gz
+*.zip
+tt.ipynb 
+tt.py
+tt/
+*.png 
+*.pdf 
+*.jpeg
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# MyPy
+.mypy_cache/
+
+# pytest
+.cache/
+
+# Coverage reports
+.coverage
+.coverage.*
+*.cover
+
+# Flake8
+.flake8
+
+# Isort
+.isort.cfg
+
+# Pylint
+pylint-report.txt
+pylint-global-message.txt
+
+# Environment variables
+.env
+
+# Python egg and wheel files
+*.egg
+*.egg-info
+*.whl
+
+# Documentation
+docs/_build/
+
+# mack 
+.DS_Store
