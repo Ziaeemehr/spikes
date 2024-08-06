@@ -1,0 +1,53 @@
+[build-system]
+requires = [
+    "hatchling",
+    "setuptools",
+     "setuptools_scm[toml]>=6.2", 
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spikes"
+dynamic = ['version']
+description = "Provide jax codes for Spikes, decisions, and actions, Book by Hugh Wilson 1999."
+authors = [
+    { name = "Abolfazl Ziaeemehr", email = "a.ziaeemehr@gmail.com" },
+]
+readme = "README.md"
+dependencies = [
+    "numpy",
+    "scipy",
+    "networkx",
+    "nbconvert",
+    "numpydoc",
+    "matplotlib",
+    "seaborn",
+    "jax",
+    "jaxlib",
+    "jax-dataclasses",
+    "setuptools-scm",
+    "tqdm"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-xdist",
+    "pytest-benchmark",
+    "build",
+    "jupyter",
+]
+
+[project.urls]
+homepage = "https://ziaeemehr.github.io/spikes/"
+repository = "https://github.com/Ziaeemehr/spikes"
+
+[tool.hatch.version]
+path = "spikes/_version.py"
