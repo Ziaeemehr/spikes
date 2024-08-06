@@ -28,6 +28,7 @@ dependencies = [
     "jax-dataclasses",
     "setuptools-scm",
     "tqdm"
+    # "latexify-py"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
