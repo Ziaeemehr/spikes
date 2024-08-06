@@ -105,6 +105,7 @@ def solve_linear_system_sympy(A, B, X0, verbose=True):
     if len(eigenvals) == 1:
         if verbose:
             print("The matrix A must have one repeated eigenvalue.")
+        return None
         
         
     return X_t#, latex_solution
