@@ -2,9 +2,68 @@ import numpy as np
 import sympy as sp
 from scipy.linalg import eig, inv
 from scipy.integrate import odeint
+from IPython.display import display, Math
+from sympy.utilities.lambdify import lambdify
 
 
-def solve_linear_system(A, B, X0, t):
+def solve_system_of_equations(
+    A_np: np.ndarray,
+    B_np: np.ndarray,
+    X0_np: np.ndarray,
+    t_range: np.ndarray,
+    t0: float = 0,
+    verbose: bool = True,
+):
+    """
+    Solve a system of first-order linear differential equations of any size.
+
+    Parameters:
+        A_np (ndarray): Coefficient matrix A.
+        B_np (ndarray): Constant vector B.
+        X0_np (ndarray): Initial condition vector X0.
+        t_range (array-like): Range of time points over which to evaluate the solution.
+        t0 (float): Initial time, default is 0.
+
+    Returns:
+        final_solution (list): List of symbolic solutions.
+        x_values (list): List of evaluated solution values over t_range.
+    """
+    t = sp.Symbol('t')
+
+    # Number of equations (and variables)
+    n = A_np.shape[0]
+
+    # Define the system of equations symbolically
+    X = sp.Matrix([sp.Function(f'x{i+1}')(t) for i in range(n)])
+    A = sp.Matrix(A_np)
+    B = sp.Matrix(B_np)
+    X0 = sp.Matrix(X0_np)
+
+    dx_dt = A * X + B
+    system = [sp.Eq(sp.diff(X[i], t), dx_dt[i]) for i in range(n)]
+
+    # Solve the homogeneous system
+    sol_hom = sp.dsolve(system)
+
+    # Find the constants using initial conditions
+    constants = sp.solve(
+        [sol.rhs.subs(t, t0) - x0 for sol, x0 in zip(sol_hom, X0)]
+    )
+
+    # Substitute the constants into the solutions
+    sol_hom_constants = [sol.rhs.subs(constants) for sol in sol_hom]
+
+    # Display symbolic solutions
+    final_solution = [sol_hom for sol_hom in sol_hom_constants]
+    
+    # Evaluate the solutions over the given time range
+    x_functions = [lambdify((t,), sol, "numpy") for sol in final_solution]
+    x_values = [x_func(t_range) for x_func in x_functions]
+
+    return final_solution, x_values
+
+
+def solve_linear_system_numerical(A, B, X0, t):
     """
     Solves the differential equation dX/dt = AX + B.
 
@@ -33,6 +92,7 @@ def solve_linear_system(A, B, X0, t):
 
 
 def solve_linear_system_analytically(A, B, X0, t):
+    '''Depricated'''
     # Equilibrium state
     X_eq = -inv(A) @ B
     
@@ -64,6 +124,7 @@ def solve_linear_system_analytically(A, B, X0, t):
     }
 
 def solve_linear_system_sympy(A, B, X0, verbose=True):
+    '''Depricated'''
     t = sp.symbols('t')
     A = sp.Matrix(A)
     B = sp.Matrix(B)
