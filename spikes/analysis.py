@@ -3,6 +3,9 @@ import numpy as np
 import numpy as np
 
 def classify_eigenvalues_dynamics(eigenvalues, tolerance=1e-10):
+    '''
+    not tested yet
+    '''
     eigenvalues = np.array(eigenvalues)
     real_parts = np.real(eigenvalues)
     imag_parts = np.imag(eigenvalues)
