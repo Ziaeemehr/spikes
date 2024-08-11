@@ -28,7 +28,8 @@ dependencies = [
     "jaxlib",
     "jax-dataclasses",
     "setuptools-scm",
-    "tqdm"
+    "tqdm",
+    "nbsphinx"
     # "latexify-py"
 ]
 classifiers = [
@@ -44,8 +45,7 @@ dev = [
     "pytest-xdist",
     "pytest-benchmark",
     "build",
-    "jupyter",
-    "nbsphinx", 
+    "jupyter", 
     "nbformat"
 ]
 
