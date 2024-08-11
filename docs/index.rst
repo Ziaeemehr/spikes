@@ -1,5 +1,5 @@
 Python codes for Spikes, decisions, and actions, Wilson 1999
-##################################################
+##############################################################
 
 Installation, How to use
 =============================
@@ -27,12 +27,31 @@ Indices and tables
 * :ref:`search`
 
 
-API and documentation
+Chapters 
 ===========================
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+
+   examples/chap_03
+   examples/chap_04
+   examples/chap_05
+
+API and documentation
+===========================
 
 .. automodule:: spikes
     :members:
     :undoc-members:
+
+.. automodule:: spikes.utils
+    :members:
+    :undoc-members:
+
+.. automodule:: spikes.plot
+    :members:
+    :undoc-members:
+
 
 

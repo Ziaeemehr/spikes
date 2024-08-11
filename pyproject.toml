@@ -24,6 +24,7 @@ dependencies = [
     "matplotlib",
     "seaborn",
     "jax",
+    "ipykernel",
     "jaxlib",
     "jax-dataclasses",
     "setuptools-scm",
@@ -44,6 +45,8 @@ dev = [
     "pytest-benchmark",
     "build",
     "jupyter",
+    "nbsphinx", 
+    "nbformat"
 ]
 
 [project.urls]

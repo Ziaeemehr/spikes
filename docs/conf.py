@@ -5,19 +5,25 @@ from setuptools_scm import get_version
 
 # sys.path.insert(0,os.path.abspath("../examples"))
 sys.path.insert(0,os.path.abspath("../spikes"))
-sys.path.insert(0, os.path.abspath("../examples/"))
+sys.path.insert(0, os.path.abspath("../examples"))
+sys.path.insert(0, os.path.abspath(".."))
 
 needs_sphinx = '1.3'
 
 extensions = [
+    'nbsphinx',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.mathjax',
     'numpydoc',
     'sphinx.ext.graphviz',
 	'sphinx.ext.viewcode'
-	# 'nbsphinx'
 ]
+
+# Exclude notebook output cells
+nbsphinx_execute = 'never' # to avoid running notebook for document
+# Set timeout for cell execution (in seconds)
+nbsphinx_timeout = 300
 
 source_suffix = '.rst'
 master_doc = 'index'
@@ -47,3 +53,11 @@ def on_missing_reference(app, env, node, contnode):
 
 def setup(app):
 	app.connect('missing-reference', on_missing_reference)
+ 
+# nbsphinx_prolog = """
+# {% set docname = env.doc2path(env.docname, base=None) %}
+# .. note::
+#    This page was generated from `{{ docname }}`__.
+
+#    __ https://github.com/Ziaeemehr/spikes/blob/main/{{ docname }}
+# """

@@ -5,11 +5,15 @@ def characteristic_polynomial(matrix):
     """
     Computes the characteristic polynomial of a given matrix.
 
-    Parameters:
-    matrix (list of lists): A 2D list representing the matrix.
+    Parameters
+    ----------
+    matrix: (list of lists) 
+        A 2D list representing the matrix.
 
-    Returns:
-    sympy.Poly: The characteristic polynomial of the matrix.
+    Returns
+    -------
+    sympy.Poly: 
+        The characteristic polynomial of the matrix.
     """
     # Define the symbolic variable
     x = sympy.Symbol('x')
@@ -32,8 +36,15 @@ def characteristic_polynomial(matrix):
 def routh(p):
     """ Construct the Routh-Hurwitz array given a polynomial in s
 
-    Input: p - a sympy.Poly object
-    Output: The Routh-Hurwitz array as a sympy.Matrix object
+    Parameters
+    ----------
+    p: sympy.Poly
+        The characteristic polynomial of coefficient matrix
+    
+    Returns
+    -------
+    value: sympy.Matrix
+        The Routh-Hurwitz array
     
     References https://github.com/alchemyst/Dynamics-and-Control/blob/master/tbcontrol/symbolic.py
     """

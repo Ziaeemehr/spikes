@@ -14,17 +14,28 @@ def plot_direction_field(
     title: str = "Direction Field for the System $dX/dt = AX + B$",
     **kwargs
 ):
-
     """
     Plots the direction field for the system dx/dt = A * X + B.
-    
-    Parameters:
-    - A: 2x2 numpy array, the coefficient matrix for the linear system.
-    - B: 1x2 numpy array, the constant vector.
-    - x1_range: tuple, the range for x1 values (default: (-10, 10)).
-    - x2_range: tuple, the range for x2 values (default: (-10, 10)).
-    - num_points: int, the number of points per axis in the grid (default: 20).
+
+    Parameters
+    ----------
+    A : numpy.ndarray
+        A 2x2 numpy array representing the coefficient matrix for the linear system.
+    B : numpy.ndarray
+        A 1x2 numpy array representing the constant vector.
+    x1_range : tuple, optional
+        The range for x1 values. Default is (-10, 10).
+    x2_range : tuple, optional
+        The range for x2 values. Default is (-10, 10).
+    num_points : int, optional
+        The number of points per axis in the grid. Default is 20.
+        
+    Returns
+    -------
+    ax : matplotlib.axes.Axes
+        The axis object with the direction field plotted.
     """
+
     # Create a grid of points (x1, x2)
     x1 = np.linspace(x1_range[0], x1_range[1], num_points)
     x2 = np.linspace(x2_range[0], x2_range[1], num_points)
