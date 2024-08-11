@@ -45,6 +45,7 @@ dev = [
     "pytest-xdist",
     "pytest-benchmark",
     "build",
+    "pandoc",
     "jupyter", 
     "nbformat"
 ]
