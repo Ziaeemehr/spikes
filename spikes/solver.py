@@ -17,16 +17,21 @@ def solve_system_of_equations(
     """
     Solve a system of first-order linear differential equations of any size.
 
-    Parameters:
-        A_np (ndarray): Coefficient matrix A.
-        B_np (ndarray): Constant vector B.
-        X0_np (ndarray): Initial condition vector X0.
-        t_range (array-like): Range of time points over which to evaluate the solution.
-        t0 (float): Initial time, default is 0.
+    :param A_np: Coefficient matrix A.
+    :type A_np: ndarray
+    :param B_np: Constant vector B.
+    :type B_np: ndarray
+    :param X0_np: Initial condition vector X0.
+    :type X0_np: ndarray
+    :param t_range: Range of time points over which to evaluate the solution.
+    :type t_range: array-like
+    :param t0: Initial time, default is 0.
+    :type t0: float
 
-    Returns:
-        final_solution (list): List of symbolic solutions.
-        x_values (list): List of evaluated solution values over t_range.
+    :returns: A tuple containing:
+        - **final_solution** (*list*): List of symbolic solutions.
+        - **x_values** (*list*): List of evaluated solution values over t_range.
+    :rtype: tuple
     """
     t = sp.Symbol('t')
 
@@ -67,14 +72,17 @@ def solve_linear_system_numerical(A, B, X0, t):
     """
     Solves the differential equation dX/dt = AX + B.
 
-    Parameters:
-    A (numpy.ndarray): Coefficient matrix.
-    B (numpy.ndarray): Constant vector.
-    X0 (numpy.ndarray): Initial condition vector.
-    t (numpy.ndarray): Array of time points at which to solve.
+    :param A: Coefficient matrix.
+    :type A: numpy.ndarray
+    :param B: Constant vector.
+    :type B: numpy.ndarray
+    :param X0: Initial condition vector.
+    :type X0: numpy.ndarray
+    :param t: Array of time points at which to solve.
+    :type t: numpy.ndarray
 
-    Returns:
-    numpy.ndarray: Array of solution vectors at each time point.
+    :returns: Array of solution vectors at each time point.
+    :rtype: numpy.ndarray
     """
     # Equilibrium state
     X_eq = -inv(A) @ B
