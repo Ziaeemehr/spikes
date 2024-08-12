@@ -1,3 +1,8 @@
+[![Test](https://github.com/Ziaeemehr/spikes/actions/workflows/tests.yml/badge.svg)](https://github.com/Ziaeemehr/spikes/actions/workflows/tests.yml)
+[![Documentation Status](https://github.com/Ziaeemehr/spikes/actions/workflows/documents.yml/badge.svg
+)](https://ziaeemehr.github.io/spikes/)
+
+
 # Spikes 
 
 ### Python code for Spikes, decisions, and actions, Wilson 1999
