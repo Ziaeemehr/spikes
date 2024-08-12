@@ -29,6 +29,7 @@ dependencies = [
     "jax-dataclasses",
     "setuptools-scm",
     "tqdm",
+    'sympy',
     "nbsphinx"
     # "latexify-py"
 ]

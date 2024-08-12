@@ -53,5 +53,7 @@ API and documentation
     :members:
     :undoc-members:
 
-
+.. automodule:: spikes.solver
+    :members:
+    :undoc-members:
 
