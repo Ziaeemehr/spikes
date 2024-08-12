@@ -45,13 +45,22 @@ API and documentation
     :members:
     :undoc-members:
 
+spikes.utils 
+----------------------------
+
 .. automodule:: spikes.utils
     :members:
     :undoc-members:
 
+spikes.plot 
+----------------------------
+
 .. automodule:: spikes.plot
     :members:
     :undoc-members:
+
+spikes.solver 
+----------------------------
 
 .. automodule:: spikes.solver
     :members:
