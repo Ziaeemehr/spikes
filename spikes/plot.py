@@ -103,7 +103,7 @@ def plot_nullclines(
     **kwargs : dict
         Additional keyword arguments to be passed to `plt.plot`.
 
-    """
+    """       
 
     # Define symbols
     x, y = sp.Symbol(symbols[0]), sp.Symbol(symbols[1])
@@ -131,14 +131,16 @@ def plot_nullclines(
     # Plotting the nullclines
     if ax is None:
         fig, ax = plt.subplots(1, figsize=figsize)
+    
+    
 
     # Plot nullcline for dx/dt = 0 (f(x, y) = 0)
     for func in nullcline_x_func:
-        ax.plot(x_vals, func(x_vals), label=f"$d{symbols[0]}/dt = 0$", **kwargs)
+        ax.plot(x_vals, func(x_vals), label=f"$d{symbols[0]}/dt = 0$", c="r", **kwargs)
 
     # Plot nullcline for dy/dt = 0 (g(x, y) = 0)
     for func in nullcline_y_func:
-        plt.plot(x_vals, func(x_vals), label=f"$d{symbols[1]}/dt = 0$", **kwargs)
+        plt.plot(x_vals, func(x_vals), label=f"$d{symbols[1]}/dt = 0$", c='b', **kwargs)
 
     # Customize the plot
     # ax.axhline(0, color='black', linewidth=0.5)
