@@ -83,6 +83,7 @@ def plot_nullclines(
     num_points=400,
     figsize: tuple = (4, 4),
     title: str = "Nullclines of the system",
+    grid=False,
     ax=None,
     **kwargs: dict
 ):
@@ -150,6 +151,7 @@ def plot_nullclines(
     ax.set_xlabel(f"{symbols[0]}")
     ax.set_ylabel(f"{symbols[1]}")
     ax.set_title(title)
-    ax.legend()
-    plt.grid(True, ls="--")
+    ax.legend(fontsize=10)
+    if grid:
+        ax.grid(True, ls="--")
     return ax
