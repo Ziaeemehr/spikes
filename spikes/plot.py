@@ -15,7 +15,7 @@ def plot_direction_field(
     xlabel: str = "x1",
     ylabel: str = "x2",
     title: str = "Direction Field for the System $dX/dt = AX + B$",
-    **kwargs
+    **kwargs,
 ):
     """
     Plots the direction field for the system dx/dt = A * X + B.
@@ -77,7 +77,7 @@ def plot_direction_field(
 def plot_nullclines(
     f,
     g,
-    symbols:List[str], 
+    symbols: List[str],
     x_range=(-2, 2),
     y_range=(-2, 2),
     num_points=400,
@@ -85,12 +85,13 @@ def plot_nullclines(
     title: str = "Nullclines of the system",
     grid=False,
     ax=None,
-    **kwargs: dict
+    **kwargs: dict,
 ):
     """
     Plots the nullclines of a two-dimensional system of differential equations.
 
-    Parameters:
+    Parameters
+    ----------
     f : sympy expression
         The right-hand side of the first differential equation dx/dt = f(x, y).
     g : sympy expression
@@ -103,8 +104,13 @@ def plot_nullclines(
         The number of points to plot (default is 400).
     **kwargs : dict
         Additional keyword arguments to be passed to `plt.plot`.
+        
+    Returns
+    -------
+    ax : matplotlib.axes.Axes
+        The axis object with the nullclines plotted.
 
-    """       
+    """
 
     # Define symbols
     x, y = sp.Symbol(symbols[0]), sp.Symbol(symbols[1])
@@ -132,8 +138,6 @@ def plot_nullclines(
     # Plotting the nullclines
     if ax is None:
         fig, ax = plt.subplots(1, figsize=figsize)
-    
-    
 
     # Plot nullcline for dx/dt = 0 (f(x, y) = 0)
     for func in nullcline_x_func:
@@ -141,7 +145,7 @@ def plot_nullclines(
 
     # Plot nullcline for dy/dt = 0 (g(x, y) = 0)
     for func in nullcline_y_func:
-        plt.plot(x_vals, func(x_vals), label=f"$d{symbols[1]}/dt = 0$", c='b', **kwargs)
+        plt.plot(x_vals, func(x_vals), label=f"$d{symbols[1]}/dt = 0$", c="b", **kwargs)
 
     # Customize the plot
     # ax.axhline(0, color='black', linewidth=0.5)

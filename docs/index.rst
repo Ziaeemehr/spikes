@@ -37,6 +37,7 @@ Chapters
    examples/chap_03
    examples/chap_04
    examples/chap_05
+   examples/chap_06
 
 API and documentation
 ===========================
