@@ -21,29 +21,32 @@
 
 %   Copyright 1984-2014 The MathWorks, Inc.
 x = A
-[m,n] = size(x);
+[m, n] = size(x);
+
 if m == n
-   % Characteristic polynomial (square x)
-   e = eig(x);
-elseif (m==1) || (n==1)
-   e = x;
+    % Characteristic polynomial (square x)
+    e = eig(x);
+elseif (m == 1) || (n == 1)
+    e = x;
 else
-   error(message('MATLAB:poly:InputSize'))
+    error(message('MATLAB:poly:InputSize'))
 end
 
 % Strip out infinities
-e = e( isfinite(e) );
+e = e(isfinite(e));
 
 % Expand recursion formula
 n = length(e);
-c = [1 zeros(1,n,class(x))];
+c = [1 zeros(1, n, class(x))];
 disp(c);
-for j=1:n
-    c(2:(j+1)) = c(2:(j+1)) - e(j).*c(1:j);
+
+for j = 1:n
+    c(2:(j + 1)) = c(2:(j + 1)) - e(j) .* c(1:j);
 end
 
 % The result should be real if the roots are complex conjugates.
-if isequal(sort(e(imag(e)>0)),sort(conj(e(imag(e)<0))))
+if isequal(sort(e(imag(e) > 0)), sort(conj(e(imag(e) < 0))))
     c = real(c);
 end
+
 disp(c)
