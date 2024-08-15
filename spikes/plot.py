@@ -155,7 +155,7 @@ def plot_nullclines(
     ax.set_xlabel(f"{symbols[0]}")
     ax.set_ylabel(f"{symbols[1]}")
     ax.set_title(title)
-    ax.legend(fontsize=10)
+    ax.legend(fontsize=10, loc='upper right')
     if grid:
         ax.grid(True, ls="--")
     return ax
