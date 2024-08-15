@@ -10,6 +10,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "spikes"
 dynamic = ['version']
+license = { file = "LICENSE" }
 description = "Provide jax codes for Spikes, decisions, and actions, Book by Hugh Wilson 1999."
 authors = [
     { name = "Abolfazl Ziaeemehr", email = "a.ziaeemehr@gmail.com" },
