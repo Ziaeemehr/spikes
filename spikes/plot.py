@@ -85,6 +85,7 @@ def plot_nullclines(
     title: str = "Nullclines of the system",
     grid=False,
     ax=None,
+    loc='best',
     **kwargs: dict,
 ):
     """
@@ -102,6 +103,8 @@ def plot_nullclines(
         The range of y values for plotting (default is (-2, 2)).
     num_points : int, optional
         The number of points to plot (default is 400).
+    loc: string, optional
+        The location of the legend (default is 'best').
     **kwargs : dict
         Additional keyword arguments to be passed to `plt.plot`.
         
@@ -155,7 +158,7 @@ def plot_nullclines(
     ax.set_xlabel(f"{symbols[0]}")
     ax.set_ylabel(f"{symbols[1]}")
     ax.set_title(title)
-    ax.legend(fontsize=10, loc='upper right')
+    ax.legend(fontsize=10, loc=loc)
     if grid:
         ax.grid(True, ls="--")
     return ax
