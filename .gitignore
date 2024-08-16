@@ -36,6 +36,7 @@ tt/
 *.png 
 *.pdf 
 *.jpeg
+_tt.ipynb
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
