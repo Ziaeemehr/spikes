@@ -148,7 +148,7 @@ def plot_nullclines(
 
     # Plot nullcline for dy/dt = 0 (g(x, y) = 0)
     for func in nullcline_y_func:
-        plt.plot(x_vals, func(x_vals), label=f"$d{symbols[1]}/dt = 0$", c="b", **kwargs)
+        ax.plot(x_vals, func(x_vals), label=f"$d{symbols[1]}/dt = 0$", c="b", **kwargs)
 
     # Customize the plot
     # ax.axhline(0, color='black', linewidth=0.5)
