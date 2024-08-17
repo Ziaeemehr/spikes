@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 3 &#8212; spikes 0.1.dev1+gb1993c0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=82a976d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css?v=0f882399" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <script src="../_static/documentation_options.js?v=d4984f21"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 4" href="chap_04.html" />
+    <link rel="prev" title="Python codes for Spikes, decisions, and actions, Wilson 1999" href="../index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chap_04.html" title="Chapter 4"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Python codes for Spikes, decisions, and actions, Wilson 1999"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">spikes 0.1.dev1+gb1993c0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Chapter 3</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Chapter-3">
+<h1><a class="reference external" href="https://github.com/Ziaeemehr/spikes/blob/main/docs/examples/chap_03.ipynb">Chapter 3</a><a class="headerlink" href="#Chapter-3" title="Link to this heading">¶</a></h1>
+<section id="Two-dimensional-systems-and-state-space">
+<h2><strong>Two-dimensional systems and state space</strong><a class="headerlink" href="#Two-dimensional-systems-and-state-space" title="Link to this heading">¶</a></h2>
+<p>Code by : Abolfazl Ziaeemehr - <a class="reference external" href="https://github.com/Ziaeemehr">https://github.com/Ziaeemehr</a></p>
+<p><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># uncomment and run this line to install the package on colab</span>
+<span class="c1"># !pip install &quot;git+https://github.com/Ziaeemehr/spikes.git&quot; -q</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">lambdify</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">eig</span><span class="p">,</span> <span class="n">inv</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Math</span>
+<span class="kn">from</span> <span class="nn">spikes.solver</span> <span class="kn">import</span> <span class="n">solve_linear_system_numerical</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Analytical-Solution-for-\frac{d\vec{X}}{dt}-=-A\vec{X}-+-\vec{B}">
+<h2>Analytical Solution for <span class="math notranslate nohighlight">\(\frac{d\vec{X}}{dt} = A\vec{X} + \vec{B}\)</span><a class="headerlink" href="#Analytical-Solution-for-\frac{d\vec{X}}{dt}-=-A\vec{X}-+-\vec{B}" title="Link to this heading">¶</a></h2>
+<p>Let’s derive the analytical solution step-by-step for the differential equation <span class="math notranslate nohighlight">\(\frac{d\vec{X}}{dt} = A\vec{X} + \vec{B}\)</span>, assuming <span class="math notranslate nohighlight">\(\lambda_1 \neq \lambda_2\)</span>.</p>
+<section id="Steps-to-Solve-Analytically">
+<h3>Steps to Solve Analytically<a class="headerlink" href="#Steps-to-Solve-Analytically" title="Link to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Find the Equilibrium State The equilibrium state <span class="math notranslate nohighlight">\(\vec{X}_{eq}\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[\vec{X}_{eq} = -A^{-1} \vec{B}\]</div>
+</li>
+<li><p>Determine the Eigenvalues and Eigenvectors The eigenvalues <span class="math notranslate nohighlight">\(\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_2\)</span> are solutions to the characteristic equation:</p>
+<div class="math notranslate nohighlight">
+\[\det(A - \lambda I) = 0\]</div>
+<p>where <span class="math notranslate nohighlight">\(I\)</span> is the identity matrix.</p>
+</li>
+</ol>
+<p>Let’s denote the eigenvectors corresponding to <span class="math notranslate nohighlight">\(\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_2\)</span> as <span class="math notranslate nohighlight">\(\vec{v}_1\)</span> and <span class="math notranslate nohighlight">\(\vec{v}_2\)</span>, respectively.</p>
+<ol class="arabic" start="3">
+<li><p>General Solution The general solution for the system <span class="math notranslate nohighlight">\(\frac{d\vec{X}}{dt} = A\vec{X}\)</span> can be written as:</p>
+<div class="math notranslate nohighlight">
+\[\vec{X}(t) = c_1 \vec{v}_1 e^{\lambda_1 t} + c_2 \vec{v}_2 e^{\lambda_2 t}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_1\)</span> and <span class="math notranslate nohighlight">\(c_2\)</span> are constants determined by initial conditions.</p>
+</li>
+<li><p>Incorporate the Equilibrium State To incorporate <span class="math notranslate nohighlight">\(\vec{B}\)</span>, we use the transformation <span class="math notranslate nohighlight">\(\vec{X} = \vec{X}_{hom} + \vec{X}_{eq}\)</span>, where <span class="math notranslate nohighlight">\(\vec{X}_{hom}\)</span> is the homogeneous solution. Thus:</p>
+<div class="math notranslate nohighlight">
+\[\vec{X}(t) = \vec{X}_{hom}(t) + \vec{X}_{eq}\]</div>
+<div class="math notranslate nohighlight">
+\[\vec{X}(t) = c_1 \vec{v}_1 e^{\lambda_1 t} + c_2 \vec{v}_2 e^{\lambda_2 t} + \vec{X}_{eq}\]</div>
+</li>
+</ol>
+<p>This gives us the analytical solution in the form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{X}(t) = \begin{pmatrix}
+a_1 e^{\lambda_1 t} + a_2 e^{\lambda_2 t} \\
+b_1 e^{\lambda_1 t} + b_2 e^{\lambda_2 t}
+\end{pmatrix} + \vec{X}_{eq}\end{split}\]</div>
+<ol class="arabic simple" start="5">
+<li><p>General Solution for Repeated Eigenvalues</p></li>
+</ol>
+<p>The general solution when <span class="math notranslate nohighlight">\(\lambda_1 = \lambda_2 = \lambda\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\vec{X}(t) = (c_1 + c_2 t) e^{\lambda t} \vec{v} + \vec{X}_{eq}\]</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>solve_linear_system_numerical<span class="o">??</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">Signature:</span> solve_linear_system_numerical<span class="ansi-blue-fg">(</span>A<span class="ansi-blue-fg">,</span> B<span class="ansi-blue-fg">,</span> X0<span class="ansi-blue-fg">,</span> t<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Source:</span>
+<span class="ansi-green-fg">def</span> solve_linear_system_numerical<span class="ansi-blue-fg">(</span>A<span class="ansi-blue-fg">,</span> B<span class="ansi-blue-fg">,</span> X0<span class="ansi-blue-fg">,</span> t<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    <span class="ansi-blue-fg">&#34;&#34;&#34;</span>
+<span class="ansi-blue-fg">    Solves the differential equation dX/dt = AX + B.</span>
+
+<span class="ansi-blue-fg">    Parameters:</span>
+<span class="ansi-blue-fg">    A (numpy.ndarray): Coefficient matrix.</span>
+<span class="ansi-blue-fg">    B (numpy.ndarray): Constant vector.</span>
+<span class="ansi-blue-fg">    X0 (numpy.ndarray): Initial condition vector.</span>
+<span class="ansi-blue-fg">    t (numpy.ndarray): Array of time points at which to solve.</span>
+
+<span class="ansi-blue-fg">    Returns:</span>
+<span class="ansi-blue-fg">    numpy.ndarray: Array of solution vectors at each time point.</span>
+<span class="ansi-blue-fg">    &#34;&#34;&#34;</span>
+    <span class="ansi-red-fg"># Equilibrium state</span>
+    X_eq <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">-</span>inv<span class="ansi-blue-fg">(</span>A<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">@</span> B
+
+    <span class="ansi-red-fg"># Eigenvalues and eigenvectors</span>
+    eigenvalues<span class="ansi-blue-fg">,</span> eigenvectors <span class="ansi-blue-fg">=</span> eig<span class="ansi-blue-fg">(</span>A<span class="ansi-blue-fg">)</span>
+
+    <span class="ansi-red-fg"># Solve for the constants a1, a2, b1, b2</span>
+    <span class="ansi-green-fg">def</span> system<span class="ansi-blue-fg">(</span>X<span class="ansi-blue-fg">,</span> t<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        <span class="ansi-green-fg">return</span> A <span class="ansi-blue-fg">@</span> X <span class="ansi-blue-fg">+</span> B
+
+    sol <span class="ansi-blue-fg">=</span> odeint<span class="ansi-blue-fg">(</span>system<span class="ansi-blue-fg">,</span> X0<span class="ansi-blue-fg">,</span> t<span class="ansi-blue-fg">)</span>
+
+    <span class="ansi-green-fg">return</span> <span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">&#34;x&#34;</span><span class="ansi-blue-fg">:</span> sol<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;xeq&#34;</span><span class="ansi-blue-fg">:</span> X_eq<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;ev&#34;</span><span class="ansi-blue-fg">:</span> eigenvalues<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;evec&#34;</span><span class="ansi-blue-fg">:</span> eigenvectors<span class="ansi-blue-fg">}</span>
+<span class="ansi-red-fg">File:</span>      ~/git/workshops/spikes/spikes/solver.py
+<span class="ansi-red-fg">Type:</span>      function
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Numerical-solution">
+<h2>Numerical solution<a class="headerlink" href="#Numerical-solution" title="Link to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">B_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">X0_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">A_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]])</span>
+<span class="n">t_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">solution_num</span> <span class="o">=</span> <span class="n">solve_linear_system_numerical</span><span class="p">(</span>
+    <span class="n">A_np</span><span class="p">,</span> <span class="n">B_np</span><span class="p">,</span> <span class="n">X0_np</span><span class="p">,</span> <span class="n">t_range</span>
+<span class="p">)</span>
+<span class="n">solution_num</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(100, 2)
+</pre></div></div>
+</div>
+</section>
+<section id="Analytical-solution">
+<h2>Analytical solution<a class="headerlink" href="#Analytical-solution" title="Link to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;x1&#39;</span><span class="p">)(</span><span class="n">t</span><span class="p">),</span> <span class="n">sp</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;x2&#39;</span><span class="p">)(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">A_np</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">])</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">B_np</span><span class="p">)</span>
+<span class="n">X0</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">X0_np</span><span class="p">)</span>
+
+<span class="n">dx_dt</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="n">B</span>
+<span class="n">system</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Eq</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="n">dx_dt</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">sp</span><span class="o">.</span><span class="n">Eq</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="n">dx_dt</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+<span class="n">sol_hom</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">dsolve</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">constants</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t0</span><span class="p">)</span> <span class="o">-</span> <span class="n">x0</span> <span class="k">for</span> <span class="n">sol</span><span class="p">,</span> <span class="n">x0</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sol_hom</span><span class="p">,</span> <span class="n">X0</span><span class="p">)]</span>
+<span class="p">)</span>
+
+<span class="n">sol_hom_constants</span> <span class="o">=</span> <span class="p">[</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">constants</span><span class="p">)</span> <span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">sol_hom</span><span class="p">]</span>
+<span class="n">final_solution</span> <span class="o">=</span> <span class="p">[</span><span class="n">sol_hom</span> <span class="k">for</span> <span class="n">sol_hom</span> <span class="ow">in</span> <span class="n">sol_hom_constants</span><span class="p">]</span>
+
+<span class="c1"># display solutions</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">final_solution</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">Math</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">(t) = </span><span class="si">{</span><span class="n">sp</span><span class="o">.</span><span class="n">latex</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+
+<span class="c1"># evaluate solution</span>
+<span class="n">x_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">lambdify</span><span class="p">((</span><span class="n">t</span><span class="p">,),</span> <span class="n">sol</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">final_solution</span><span class="p">]</span>
+<span class="n">x_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_func</span><span class="p">(</span><span class="n">t_range</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_func</span> <span class="ow">in</span> <span class="n">x_functions</span><span class="p">]</span>
+
+<span class="c1"># plot solutions</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">x_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$X_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> a$&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># plot numerical solution to compare</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">solution_num</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$X_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> num$&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">);</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Equilibrium state:&quot;</span><span class="p">,</span> <span class="n">solution_num</span><span class="p">[</span><span class="s1">&#39;xeq&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eigenvalues:&quot;</span><span class="p">,</span> <span class="n">solution_num</span><span class="p">[</span><span class="s1">&#39;ev&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle x_1(t) = \frac{1}{2} + \frac{3 e^{- 4 t}}{4} - \frac{5 e^{- 8 t}}{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle x_2(t) = \frac{1}{2} - \frac{3 e^{- 4 t}}{4} + \frac{e^{- 8 t}}{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Equilibrium state: [0.5 0.5]
+Eigenvalues: [-8.+0.j -4.+0.j]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_03_9_3.png" src="../_images/examples_chap_03_9_3.png" />
+</div>
+</div>
+<p>We can define the above process as a function <code class="docutils literal notranslate"><span class="pre">solve_system_of_equations</span></code> that takes in the coefficient matrix <code class="docutils literal notranslate"><span class="pre">A</span></code> (any size) , rhs of <code class="docutils literal notranslate"><span class="pre">B</span></code> and initial conditions <code class="docutils literal notranslate"><span class="pre">X0</span></code> and time range <code class="docutils literal notranslate"><span class="pre">t_range</span></code>. The function will return the final analytical solution and evalution of the function at fiven time interval.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">spikes.solver</span> <span class="kn">import</span> <span class="n">solve_system_of_equations</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">B_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">X0_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">A_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]])</span>
+<span class="n">t_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">solution_num</span> <span class="o">=</span> <span class="n">solve_linear_system_numerical</span><span class="p">(</span>
+    <span class="n">A_np</span><span class="p">,</span> <span class="n">B_np</span><span class="p">,</span> <span class="n">X0_np</span><span class="p">,</span> <span class="n">t_range</span>
+<span class="p">)</span>
+<span class="n">solution_num</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+
+<span class="n">final_solution</span><span class="p">,</span> <span class="n">x_values</span> <span class="o">=</span> <span class="n">solve_system_of_equations</span><span class="p">(</span><span class="n">A_np</span><span class="p">,</span> <span class="n">B_np</span><span class="p">,</span> <span class="n">X0_np</span><span class="p">,</span> <span class="n">t_range</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">final_solution</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">Math</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">(t) = </span><span class="si">{</span><span class="n">sp</span><span class="o">.</span><span class="n">latex</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+
+<span class="c1"># plot solutions</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">x_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$X_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> a$&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># plot numerical solution to compare</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">solution_num</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$X_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> num$&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">);</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Equilibrium state:&quot;</span><span class="p">,</span> <span class="n">solution_num</span><span class="p">[</span><span class="s1">&#39;xeq&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Eigenvalues:&quot;</span><span class="p">,</span> <span class="n">solution_num</span><span class="p">[</span><span class="s1">&#39;ev&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle x_1(t) = \frac{1}{2} + \frac{3 e^{- 4 t}}{4} - \frac{5 e^{- 8 t}}{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle x_2(t) = \frac{1}{2} - \frac{3 e^{- 4 t}}{4} + \frac{e^{- 8 t}}{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Equilibrium state: [0.5 0.5]
+Eigenvalues: [-8.+0.j -4.+0.j]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_03_12_3.png" src="../_images/examples_chap_03_12_3.png" />
+</div>
+</div>
+</section>
+<section id="Direction-Fields">
+<h2>Direction Fields<a class="headerlink" href="#Direction-Fields" title="Link to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">spikes.plot</span> <span class="kn">import</span> <span class="n">plot_direction_field</span>
+plot_direction_field<span class="o">?</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">Signature:</span>
+plot_direction_field<span class="ansi-blue-fg">(</span>
+    A<span class="ansi-blue-fg">:</span> numpy<span class="ansi-blue-fg">.</span>ndarray<span class="ansi-blue-fg">,</span>
+    B<span class="ansi-blue-fg">:</span> numpy<span class="ansi-blue-fg">.</span>ndarray<span class="ansi-blue-fg">,</span>
+    x1_range<span class="ansi-blue-fg">:</span> tuple <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
+    x2_range<span class="ansi-blue-fg">:</span> tuple <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
+    num_points<span class="ansi-blue-fg">:</span> int <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">20</span><span class="ansi-blue-fg">,</span>
+    ax<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
+    xlabel<span class="ansi-blue-fg">:</span> str <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#39;x1&#39;</span><span class="ansi-blue-fg">,</span>
+    ylabel<span class="ansi-blue-fg">:</span> str <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#39;x2&#39;</span><span class="ansi-blue-fg">,</span>
+    title<span class="ansi-blue-fg">:</span> str <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#39;Direction Field for the System $dX/dt = AX + B$&#39;</span><span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Docstring:</span>
+Plots the direction field for the system dx/dt = A * X + B.
+
+Parameters:
+- A: 2x2 numpy array, the coefficient matrix for the linear system.
+- B: 1x2 numpy array, the constant vector.
+- x1_range: tuple, the range for x1 values (default: (-10, 10)).
+- x2_range: tuple, the range for x2 values (default: (-10, 10)).
+- num_points: int, the number of points per axis in the grid (default: 20).
+<span class="ansi-red-fg">File:</span>      ~/git/workshops/spikes/spikes/plot.py
+<span class="ansi-red-fg">Type:</span>      function
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">spikes.plot</span> <span class="kn">import</span> <span class="n">plot_direction_field</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_direction_field</span><span class="p">(</span><span class="n">A_np</span><span class="p">,</span> <span class="n">B_np</span><span class="p">,</span> <span class="n">x1_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+
+<span class="c1">#plot a solution trajectory</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">solve_linear_system_numerical</span><span class="p">(</span><span class="n">A_np</span><span class="p">,</span> <span class="n">B_np</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">t_range</span><span class="p">)[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sol</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sol</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">)</span>
+<span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">);</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_03_15_0.png" src="../_images/examples_chap_03_15_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Chapter 3</a><ul>
+<li><a class="reference internal" href="#Two-dimensional-systems-and-state-space"><strong>Two-dimensional systems and state space</strong></a></li>
+<li><a class="reference internal" href="#Analytical-Solution-for-\frac{d\vec{X}}{dt}-=-A\vec{X}-+-\vec{B}">Analytical Solution for <span class="math notranslate nohighlight">\(\frac{d\vec{X}}{dt} = A\vec{X} + \vec{B}\)</span></a><ul>
+<li><a class="reference internal" href="#Steps-to-Solve-Analytically">Steps to Solve Analytically</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Numerical-solution">Numerical solution</a></li>
+<li><a class="reference internal" href="#Analytical-solution">Analytical solution</a></li>
+<li><a class="reference internal" href="#Direction-Fields">Direction Fields</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../index.html"
+                          title="previous chapter">Python codes for Spikes, decisions, and actions, Wilson 1999</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="chap_04.html"
+                          title="next chapter">Chapter 4</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/chap_03.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chap_04.html" title="Chapter 4"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Python codes for Spikes, decisions, and actions, Wilson 1999"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">spikes 0.1.dev1+gb1993c0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Chapter 3</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, Abolfazl Ziaeemehr.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

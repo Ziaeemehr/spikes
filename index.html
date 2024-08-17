@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Python codes for Spikes, decisions, and actions, Wilson 1999 &#8212; spikes 0.1.dev1+gb1993c0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=82a976d7" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=0f882399" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <script src="_static/documentation_options.js?v=d4984f21"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Chapter 3" href="examples/chap_03.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples/chap_03.html" title="Chapter 3"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">spikes 0.1.dev1+gb1993c0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Python codes for Spikes, decisions, and actions, Wilson 1999</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="python-codes-for-spikes-decisions-and-actions-wilson-1999">
+<h1>Python codes for Spikes, decisions, and actions, Wilson 1999<a class="headerlink" href="#python-codes-for-spikes-decisions-and-actions-wilson-1999" title="Link to this heading">¶</a></h1>
+<section id="installation-how-to-use">
+<h2>Installation, How to use<a class="headerlink" href="#installation-how-to-use" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>using on Colab (Recommended)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Go to examples</p></li>
+<li><p>Open a notebook and click on “open on colab”</p></li>
+<li><p>Uncomment the cell with pip install command to install the netsci package.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>using on local machines</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<span class="c1"># or</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;git+https://github.com/Ziaeemehr/spikes.git&quot;</span>
+</pre></div>
+</div>
+<section id="indices-and-tables">
+<h3>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+<section id="chapters">
+<h2>Chapters<a class="headerlink" href="#chapters" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/chap_03.html">Chapter 3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_03.html#Two-dimensional-systems-and-state-space"><strong>Two-dimensional systems and state space</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_03.html#Analytical-Solution-for-\frac{d\vec{X}}{dt}-=-A\vec{X}-+-\vec{B}">Analytical Solution for <span class="math notranslate nohighlight">\(\frac{d\vec{X}}{dt} = A\vec{X} + \vec{B}\)</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_03.html#Steps-to-Solve-Analytically">Steps to Solve Analytically</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_03.html#Numerical-solution">Numerical solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_03.html#Analytical-solution">Analytical solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_03.html#Direction-Fields">Direction Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/chap_04.html">Chapter 4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_04.html#Higher-dimensional-linear-systems"><strong>Higher dimensional linear systems</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_04.html#Eq.-4.2">Eq. 4.2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_04.html#4.3-Oscillatory-control-of-respiration">4.3 Oscillatory control of respiration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/chap_05.html">Chapter 5</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_05.html#Approximation-and-simulation"><strong>Approximation and simulation</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_05.html#Exercise-2,-Solving-with-Euler-method">Exercise 2, Solving with Euler method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_05.html#Exercise-1.">Exercise 1.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/chap_06.html">Chapter 6</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Nonlinear-neurodynamics-and-bifurcations"><strong>Nonlinear neurodynamics and bifurcations</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Step-1:-Define-the-System-of-Differential-Equations">Step 1: Define the System of Differential Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Step-2:-Find-the-Nullclines">Step 2: Find the Nullclines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Step-3:-Use-SymPy-to-Solve-for-Nullclines">Step 3: Use SymPy to Solve for Nullclines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Step-4:-Plot-the-Nullclines-Using-Matplotlib">Step 4: Plot the Nullclines Using Matplotlib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Explanation">Explanation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Tools-Used">Tools Used</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_06.html#adding-an-interactive-trajectory-solution">adding an interactive trajectory solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_06.html#Related-tool">Related tool</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#pplane">pplane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Stabiliby-of-steady-states">Stabiliby of steady states</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_06.html#Explanation:">Explanation:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/chap_06.html#Customizing-the-Code:">Customizing the Code:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#A-short-term-memory-circuit">A short-term memory circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Hysteresis,-bifurcation,-and-memory">Hysteresis, bifurcation, and memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Adaptation,-forgetting,-and-catastrophe-theory">Adaptation, forgetting, and catastrophe theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/chap_06.html#Competition-and-neural-decisions">Competition and neural decisions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-spikes">
+<span id="api-and-documentation"></span><h2>API and documentation<a class="headerlink" href="#module-spikes" title="Link to this heading">¶</a></h2>
+<section id="module-spikes.utils">
+<span id="spikes-utils"></span><h3>spikes.utils<a class="headerlink" href="#module-spikes.utils" title="Link to this heading">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.utils.characteristic_polynomial">
+<span class="sig-name descname"><span class="pre">characteristic_polynomial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/utils.html#characteristic_polynomial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.utils.characteristic_polynomial" title="Link to this definition">¶</a></dt>
+<dd><p>Computes the characteristic polynomial of a given matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>matrix: (list of lists)</strong></dt><dd><p>A 2D list representing the matrix.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>sympy.Poly:</dt><dd><p>The characteristic polynomial of the matrix.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.utils.routh">
+<span class="sig-name descname"><span class="pre">routh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/utils.html#routh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.utils.routh" title="Link to this definition">¶</a></dt>
+<dd><p>Construct the Routh-Hurwitz array given a polynomial in s</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>p: sympy.Poly</strong></dt><dd><p>The characteristic polynomial of coefficient matrix</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>value: sympy.Matrix</dt><dd><p>The Routh-Hurwitz array</p>
+</dd>
+<dt>References <a class="reference external" href="https://github.com/alchemyst/Dynamics-and-Control/blob/master/tbcontrol/symbolic.py">https://github.com/alchemyst/Dynamics-and-Control/blob/master/tbcontrol/symbolic.py</a></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-spikes.plot">
+<span id="spikes-plot"></span><h3>spikes.plot<a class="headerlink" href="#module-spikes.plot" title="Link to this heading">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.plot.plot_direction_field">
+<span class="sig-name descname"><span class="pre">plot_direction_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'x1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'x2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Direction</span> <span class="pre">Field</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">System</span> <span class="pre">$dX/dt</span> <span class="pre">=</span> <span class="pre">AX</span> <span class="pre">+</span> <span class="pre">B$'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/plot.html#plot_direction_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.plot.plot_direction_field" title="Link to this definition">¶</a></dt>
+<dd><p>Plots the direction field for the system dx/dt = A * X + B.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>A</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>A 2x2 numpy array representing the coefficient matrix for the linear system.</p>
+</dd>
+<dt><strong>B</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>A 1x2 numpy array representing the constant vector.</p>
+</dd>
+<dt><strong>x1_range</strong><span class="classifier">tuple, optional</span></dt><dd><p>The range for x1 values. Default is (-10, 10).</p>
+</dd>
+<dt><strong>x2_range</strong><span class="classifier">tuple, optional</span></dt><dd><p>The range for x2 values. Default is (-10, 10).</p>
+</dd>
+<dt><strong>num_points</strong><span class="classifier">int, optional</span></dt><dd><p>The number of points per axis in the grid. Default is 20.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axis object with the direction field plotted.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.plot.plot_nullclines">
+<span class="sig-name descname"><span class="pre">plot_nullclines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-2,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Nullclines</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">system'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/plot.html#plot_nullclines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.plot.plot_nullclines" title="Link to this definition">¶</a></dt>
+<dd><p>Plots the nullclines of a two-dimensional system of differential equations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>f</strong><span class="classifier">sympy expression</span></dt><dd><p>The right-hand side of the first differential equation dx/dt = f(x, y).</p>
+</dd>
+<dt><strong>g</strong><span class="classifier">sympy expression</span></dt><dd><p>The right-hand side of the second differential equation dy/dt = g(x, y).</p>
+</dd>
+<dt><strong>x_range</strong><span class="classifier">tuple, optional</span></dt><dd><p>The range of x values for plotting (default is (-2, 2)).</p>
+</dd>
+<dt><strong>y_range</strong><span class="classifier">tuple, optional</span></dt><dd><p>The range of y values for plotting (default is (-2, 2)).</p>
+</dd>
+<dt><strong>num_points</strong><span class="classifier">int, optional</span></dt><dd><p>The number of points to plot (default is 400).</p>
+</dd>
+<dt><strong>loc: string, optional</strong></dt><dd><p>The location of the legend (default is ‘best’).</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier">dict</span></dt><dd><p>Additional keyword arguments to be passed to <code class="xref any docutils literal notranslate"><span class="pre">plt.plot</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axis object with the nullclines plotted.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-spikes.solver">
+<span id="spikes-solver"></span><h3>spikes.solver<a class="headerlink" href="#module-spikes.solver" title="Link to this heading">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.solver.solve_system_of_equations">
+<span class="sig-name descname"><span class="pre">solve_system_of_equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A_np</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B_np</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0_np</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/solver.html#solve_system_of_equations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.solver.solve_system_of_equations" title="Link to this definition">¶</a></dt>
+<dd><p>Solve a system of first-order linear differential equations of any size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A_np</strong> (<em>ndarray</em>) – Coefficient matrix A.</p></li>
+<li><p><strong>B_np</strong> (<em>ndarray</em>) – Constant vector B.</p></li>
+<li><p><strong>X0_np</strong> (<em>ndarray</em>) – Initial condition vector X0.</p></li>
+<li><p><strong>t_range</strong> (<em>array-like</em>) – Range of time points over which to evaluate the solution.</p></li>
+<li><p><strong>t0</strong> (<em>float</em>) – Initial time, default is 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing:
+- <strong>final_solution</strong> (<em>list</em>): List of symbolic solutions.
+- <strong>x_values</strong> (<em>list</em>): List of evaluated solution values over t_range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.solver.solve_linear_system_numerical">
+<span class="sig-name descname"><span class="pre">solve_linear_system_numerical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/solver.html#solve_linear_system_numerical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.solver.solve_linear_system_numerical" title="Link to this definition">¶</a></dt>
+<dd><p>Solves the differential equation dX/dt = AX + B.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>numpy.ndarray</em>) – Coefficient matrix.</p></li>
+<li><p><strong>B</strong> (<em>numpy.ndarray</em>) – Constant vector.</p></li>
+<li><p><strong>X0</strong> (<em>numpy.ndarray</em>) – Initial condition vector.</p></li>
+<li><p><strong>t</strong> (<em>numpy.ndarray</em>) – Array of time points at which to solve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of solution vectors at each time point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.solver.solve_linear_system_analytically">
+<span class="sig-name descname"><span class="pre">solve_linear_system_analytically</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/solver.html#solve_linear_system_analytically"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.solver.solve_linear_system_analytically" title="Link to this definition">¶</a></dt>
+<dd><p>Depricated</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spikes.solver.solve_linear_system_sympy">
+<span class="sig-name descname"><span class="pre">solve_linear_system_sympy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spikes/solver.html#solve_linear_system_sympy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spikes.solver.solve_linear_system_sympy" title="Link to this definition">¶</a></dt>
+<dd><p>Depricated</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Python codes for Spikes, decisions, and actions, Wilson 1999</a><ul>
+<li><a class="reference internal" href="#installation-how-to-use">Installation, How to use</a><ul>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#chapters">Chapters</a></li>
+<li><a class="reference internal" href="#module-spikes">API and documentation</a><ul>
+<li><a class="reference internal" href="#module-spikes.utils">spikes.utils</a><ul>
+<li><a class="reference internal" href="#spikes.utils.characteristic_polynomial"><code class="docutils literal notranslate"><span class="pre">characteristic_polynomial()</span></code></a></li>
+<li><a class="reference internal" href="#spikes.utils.routh"><code class="docutils literal notranslate"><span class="pre">routh()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-spikes.plot">spikes.plot</a><ul>
+<li><a class="reference internal" href="#spikes.plot.plot_direction_field"><code class="docutils literal notranslate"><span class="pre">plot_direction_field()</span></code></a></li>
+<li><a class="reference internal" href="#spikes.plot.plot_nullclines"><code class="docutils literal notranslate"><span class="pre">plot_nullclines()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-spikes.solver">spikes.solver</a><ul>
+<li><a class="reference internal" href="#spikes.solver.solve_system_of_equations"><code class="docutils literal notranslate"><span class="pre">solve_system_of_equations()</span></code></a></li>
+<li><a class="reference internal" href="#spikes.solver.solve_linear_system_numerical"><code class="docutils literal notranslate"><span class="pre">solve_linear_system_numerical()</span></code></a></li>
+<li><a class="reference internal" href="#spikes.solver.solve_linear_system_analytically"><code class="docutils literal notranslate"><span class="pre">solve_linear_system_analytically()</span></code></a></li>
+<li><a class="reference internal" href="#spikes.solver.solve_linear_system_sympy"><code class="docutils literal notranslate"><span class="pre">solve_linear_system_sympy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="examples/chap_03.html"
+                          title="next chapter">Chapter 3</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples/chap_03.html" title="Chapter 3"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">spikes 0.1.dev1+gb1993c0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Python codes for Spikes, decisions, and actions, Wilson 1999</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, Abolfazl Ziaeemehr.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 6 &#8212; spikes 0.1.dev1+gb1993c0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=82a976d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css?v=0f882399" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <script src="../_static/documentation_options.js?v=d4984f21"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Chapter 5" href="chap_05.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chap_05.html" title="Chapter 5"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">spikes 0.1.dev1+gb1993c0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Chapter 6</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Chapter-6">
+<h1><a class="reference external" href="https://github.com/Ziaeemehr/spikes/blob/main/docs/examples/chap_06.ipynb">Chapter 6</a><a class="headerlink" href="#Chapter-6" title="Link to this heading">¶</a></h1>
+<section id="Nonlinear-neurodynamics-and-bifurcations">
+<h2><strong>Nonlinear neurodynamics and bifurcations</strong><a class="headerlink" href="#Nonlinear-neurodynamics-and-bifurcations" title="Link to this heading">¶</a></h2>
+<p>Code by : Abolfazl Ziaeemehr - <a class="reference external" href="https://github.com/Ziaeemehr">https://github.com/Ziaeemehr</a></p>
+<p><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># uncomment and run this line to install the package on colab</span>
+<span class="c1"># !pip install &quot;git+https://github.com/Ziaeemehr/spikes.git&quot; -q</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sympy</span>
+<span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">eig</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Math</span>
+<span class="kn">from</span> <span class="nn">spikes.solver</span> <span class="kn">import</span> <span class="n">solve_system_of_equations</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="n">sympy</span><span class="o">.</span><span class="n">init_printing</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><br/><span></span><span class="n">LABELSIZE</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">LABELSIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">titlesize</span><span class="o">=</span><span class="n">LABELSIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span> <span class="n">titlesize</span><span class="o">=</span><span class="n">LABELSIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;legend&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">LABELSIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">LABELSIZE</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">LABELSIZE</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.cmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;jet&#39;</span>
+</pre></div>
+</div>
+</div>
+<p>To plot the nullclines of a two-dimensional system of differential equations, you can use Python along with libraries like <code class="docutils literal notranslate"><span class="pre">NumPy</span></code>, <code class="docutils literal notranslate"><span class="pre">Matplotlib</span></code>, and <code class="docutils literal notranslate"><span class="pre">SymPy</span></code>. Here’s a brief overview of how to do it:</p>
+</section>
+<section id="Step-1:-Define-the-System-of-Differential-Equations">
+<h2>Step 1: Define the System of Differential Equations<a class="headerlink" href="#Step-1:-Define-the-System-of-Differential-Equations" title="Link to this heading">¶</a></h2>
+<p>A two-dimensional system of differential equations can be written as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+\frac{dx}{dt} = f(x, y) \\
+\frac{dy}{dt} = g(x, y)
+\end{cases}\end{split}\]</div>
+</section>
+<section id="Step-2:-Find-the-Nullclines">
+<h2>Step 2: Find the Nullclines<a class="headerlink" href="#Step-2:-Find-the-Nullclines" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Nullcline for <span class="math notranslate nohighlight">\(\frac{dx}{dt} = 0\)</span> : Set <span class="math notranslate nohighlight">\(f(x, y) = 0\)</span> .</p></li>
+<li><p>Nullcline for <span class="math notranslate nohighlight">\(\frac{dy}{dt} = 0\)</span> : Set <span class="math notranslate nohighlight">\(g(x, y) = 0\)</span> .</p></li>
+</ul>
+</section>
+<section id="Step-3:-Use-SymPy-to-Solve-for-Nullclines">
+<h2>Step 3: Use SymPy to Solve for Nullclines<a class="headerlink" href="#Step-3:-Use-SymPy-to-Solve-for-Nullclines" title="Link to this heading">¶</a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">SymPy</span></code> to symbolically solve for <span class="math notranslate nohighlight">\(y\)</span> in terms of <span class="math notranslate nohighlight">\(x\)</span> (or vice versa) where these equations are zero.</p>
+</section>
+<section id="Step-4:-Plot-the-Nullclines-Using-Matplotlib">
+<h2>Step 4: Plot the Nullclines Using Matplotlib<a class="headerlink" href="#Step-4:-Plot-the-Nullclines-Using-Matplotlib" title="Link to this heading">¶</a></h2>
+<p>After finding the expressions for the nullclines, you can use <code class="docutils literal notranslate"><span class="pre">Matplotlib</span></code> to plot them over a grid of values for <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p>
+</section>
+<section id="Example">
+<h2>Example<a class="headerlink" href="#Example" title="Link to this heading">¶</a></h2>
+<p>Consider the following system of differential equations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+\frac{dx}{dt} = x^2 - y \\
+\frac{dy}{dt} = y - x
+\end{cases}\end{split}\]</div>
+</section>
+<section id="Explanation">
+<h2>Explanation<a class="headerlink" href="#Explanation" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Defining the system</strong>: The functions <span class="math notranslate nohighlight">\(f(x, y)\)</span> and <span class="math notranslate nohighlight">\(g(x, y)\)</span> represent the right-hand side of the system of differential equations.</p></li>
+<li><p><strong>Finding nullclines</strong>: We solve <span class="math notranslate nohighlight">\(f(x, y) = 0\)</span> and <span class="math notranslate nohighlight">\(g(x, y) = 0\)</span> for <span class="math notranslate nohighlight">\(y\)</span>.</p></li>
+<li><p><strong>Plotting</strong>: The nullclines are plotted using <code class="docutils literal notranslate"><span class="pre">Matplotlib</span></code>, with one set for <span class="math notranslate nohighlight">\(\frac{dx}{dt} = 0\)</span> and another for <span class="math notranslate nohighlight">\(\frac{dy}{dt} = 0\)</span>.</p></li>
+</ol>
+</section>
+<section id="Tools-Used">
+<h2>Tools Used<a class="headerlink" href="#Tools-Used" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>SymPy</strong>: For symbolic computation, solving the equations for nullclines.</p></li>
+<li><p><strong>NumPy</strong>: For numerical operations and creating arrays of values.</p></li>
+<li><p><strong>Matplotlib</strong>: For plotting the nullclines on a 2D plane.</p></li>
+</ul>
+<p>This approach helps visualize where the system’s derivatives are zero, giving insight into the system’s behavior, such as identifying equilibrium points and possible phase portrait structures.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
+<span class="kn">from</span> <span class="nn">spikes.plot</span> <span class="kn">import</span> <span class="n">plot_nullclines</span>
+
+<span class="c1"># Example usage:</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x y&#39;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plot_nullclines</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_6_0.png" src="../_images/examples_chap_06_6_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># adding direction fields</span>
+<span class="k">def</span> <span class="nf">fp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">gp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span>
+
+
+<span class="k">def</span> <span class="nf">plot_vector_field</span><span class="p">(</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>
+    <span class="n">xrange</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">yrange</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">num_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">rotatexy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xrange</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_points</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">yrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yrange</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_points</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">v</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">u_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">u</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+    <span class="n">v_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rotatexy</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">v_norm</span><span class="p">,</span> <span class="n">u_norm</span><span class="p">);</span>
+        <span class="c1"># ax.streamplot(Y, X, v_norm, u_norm, color=&#39;k&#39;, linewidth=0.5, cmap=plt.cm.autumn)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">u_norm</span><span class="p">,</span> <span class="n">v_norm</span><span class="p">)</span>
+        <span class="c1"># ax.streamplot(X, Y, u_norm, v_norm, color=&#39;k&#39;, linewidth=0.5, cmap=plt.cm.autumn)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x y&#39;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plot_nullclines</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+<span class="n">plot_vector_field</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">ax</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_8_0.png" src="../_images/examples_chap_06_8_0.png" />
+</div>
+</div>
+<section id="adding-an-interactive-trajectory-solution">
+<h3>adding an interactive trajectory solution<a class="headerlink" href="#adding-an-interactive-trajectory-solution" title="Link to this heading">¶</a></h3>
+<p>If you are getting messy output just comment the line iteract()</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fp</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">gp</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+
+<span class="k">def</span> <span class="nf">plot_trajectory</span><span class="p">(</span><span class="n">x0</span><span class="o">=-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tspan</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">));</span>
+    <span class="n">plot_nullclines</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+    <span class="n">plot_vector_field</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+    <span class="n">t_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tspan</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">ode</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span><span class="n">y0</span><span class="p">]),</span> <span class="n">t</span><span class="o">=</span><span class="n">t_range</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sol</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">sol</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">);</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x0</span><span class="p">],</span> <span class="p">[</span><span class="n">y0</span><span class="p">],</span> <span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">);</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Phase Portrait (x0=</span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, y0=</span><span class="si">{</span><span class="n">y0</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="c1"># plt.show()</span>
+
+<span class="c1"># comment the following line if you don&#39;t want to use interactive mode:</span>
+<span class="c1"># interact(plot_trajectory, x0=(-1.99,1.99,.1), y0=(-1.99,1.99,.1), tspan=(1,5,0.5))</span>
+
+<span class="c1"># uncomment the following for using without interactive mode</span>
+<span class="n">plot_trajectory</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_10_0.png" src="../_images/examples_chap_06_10_0.png" />
+</div>
+</div>
+<p>Equation 6.3</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\frac{dA}{dt} &amp;= \frac{1}{\tau_A}\big( -A + 2B \big) \\
+\frac{dB}{dt} &amp;= \frac{1}{\tau_B}\big( -B + \frac{L}{1+A} \big) \\
+\end{align*}\end{split}\]</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">A</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">B</span>
+
+<span class="k">def</span> <span class="nf">gp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">B</span> <span class="o">+</span> <span class="n">L</span> <span class="o">/</span> <span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">ode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fp</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">gp</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+
+<span class="n">A</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;A B&#39;</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">A</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">B</span>
+<span class="n">g</span> <span class="o">=</span> <span class="o">-</span><span class="n">B</span> <span class="o">+</span> <span class="n">L</span> <span class="o">/</span> <span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_trajectory</span><span class="p">(</span><span class="n">A0</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">B0</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">tspan</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">));</span>
+    <span class="n">plot_nullclines</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">],</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">y_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+    <span class="n">plot_vector_field</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">xrange</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">yrange</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">rotatexy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">t_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tspan</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">ode</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">A0</span><span class="p">,</span><span class="n">B0</span><span class="p">]),</span> <span class="n">t</span><span class="o">=</span><span class="n">t_range</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sol</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">sol</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">);</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">B0</span><span class="p">],</span> <span class="p">[</span><span class="n">A0</span><span class="p">],</span> <span class="s1">&#39;ko&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">);</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Phase Portrait (A0=</span><span class="si">{</span><span class="n">A0</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, B0=</span><span class="si">{</span><span class="n">B0</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># comment the following line if you don&#39;t want to use interactive mode:</span>
+<span class="c1"># interact(plot_trajectory, A0=(0.1,9.99,.1), B0=(0.1,9.99,.1), tspan=(1,10,0.5))</span>
+
+<span class="c1"># uncomment the following for using without interactive mode</span>
+<span class="n">plot_trajectory</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_12_0.png" src="../_images/examples_chap_06_12_0.png" />
+</div>
+</div>
+</section>
+<section id="Related-tool">
+<h3>Related tool<a class="headerlink" href="#Related-tool" title="Link to this heading">¶</a></h3>
+</section>
+</section>
+<section id="pplane">
+<h2>pplane<a class="headerlink" href="#pplane" title="Link to this heading">¶</a></h2>
+<p>There is also a java/matlab tool available for visualization of the nullclines and vector fields <a class="reference external" href="https://www.cs.unm.edu/~joel/dfield/">here</a>.</p>
+</section>
+<section id="Stabiliby-of-steady-states">
+<h2>Stabiliby of steady states<a class="headerlink" href="#Stabiliby-of-steady-states" title="Link to this heading">¶</a></h2>
+<p>The process includes the calculation of the Jacobian matrix, finding the eigenvalues of the Jacobian matrix at the equilibrium point, and classifying the equilibrium point based on the nature of the eigenvalues.</p>
+<p>We’ll use the <code class="docutils literal notranslate"><span class="pre">sympy</span></code> library for symbolic differentiation (to compute the Jacobian) and <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for numerical linear algebra (to find eigenvalues).</p>
+<p>Here’s a step-by-step Python code that implements the process:</p>
+<section id="Explanation:">
+<h3>Explanation:<a class="headerlink" href="#Explanation:" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Step 1 (Equilibrium Points):</strong></p>
+<ul class="simple">
+<li><p>We define a system of equations <span class="math notranslate nohighlight">\(\frac{dX}{dt} = F(X)\)</span>.</p></li>
+<li><p>The equilibrium points are found by solving <span class="math notranslate nohighlight">\(F(X) = 0\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>Step 2 (Jacobian Matrix):</strong></p>
+<ul class="simple">
+<li><p>The Jacobian matrix is calculated symbolically using <code class="docutils literal notranslate"><span class="pre">sympy.jacobian</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Step 3 (Eigenvalue Analysis and Classification):</strong></p>
+<ul class="simple">
+<li><p>The Jacobian matrix at each equilibrium point is substituted into and evaluated numerically.</p></li>
+<li><p>The eigenvalues are calculated using <code class="docutils literal notranslate"><span class="pre">numpy.linalg.eigvals</span></code>.</p></li>
+<li><p>The type of equilibrium point is classified based on the eigenvalues:</p>
+<ul>
+<li><p><strong>Node (Stable/Unstable):</strong> All real and either positive (unstable) or negative (stable).</p></li>
+<li><p><strong>Saddle Point:</strong> Mixed signs among real eigenvalues.</p></li>
+<li><p><strong>Spiral (Stable/Unstable):</strong> Complex eigenvalues with negative or positive real parts.</p></li>
+<li><p><strong>Center:</strong> Purely imaginary eigenvalues (neutral stability).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="Customizing-the-Code:">
+<h3>Customizing the Code:<a class="headerlink" href="#Customizing-the-Code:" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>System of Equations:</strong> Modify <code class="docutils literal notranslate"><span class="pre">F</span></code> for your system.</p></li>
+<li><p><strong>Variables:</strong> If your system has more variables, extend the variables <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">x2</span></code>, etc.</p></li>
+<li><p><strong>Jacobian Calculation:</strong> The Jacobian calculation automatically scales with the number of variables in the system.</p></li>
+</ol>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Math</span>
+<span class="n">sp</span><span class="o">.</span><span class="n">init_printing</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">find_jacobian</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the Jacobian matrix for a system of equations F(X).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    F: sympy.Matrix</span>
+<span class="sd">        The system of equations represented as a sympy Matrix.</span>
+<span class="sd">    X: sympy.Symbol or iterable of sympy.Symbol</span>
+<span class="sd">        The independent variables of the system of equations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    J: sympy.Matrix</span>
+<span class="sd">        The Jacobian matrix of the system of equations.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">J</span>
+
+<span class="k">def</span> <span class="nf">equilibrium_points</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve for the equilibrium points by setting F(X) = 0.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    F: sympy.Matrix</span>
+<span class="sd">        The system of equations represented as a sympy Matrix.</span>
+<span class="sd">    X: sympy.Symbol or iterable of sympy</span>
+<span class="sd">        The independent variables of the system of equations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    eq_points: sympy.Eq</span>
+<span class="sd">        List of equilibrium points in the system.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">eq_points</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">eq_points</span>
+
+<span class="k">def</span> <span class="nf">has_complex_elements</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span><span class="n">sympy</span><span class="o">.</span><span class="n">Matrix</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">matrix</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">sympy</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">classify_equilibrium</span><span class="p">(</span><span class="n">Jacobian</span><span class="p">,</span> <span class="n">X_eq</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classify the equilibrium point by calculating eigenvalues of the Jacobian at X_eq.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Jacobian: sympy.Matrix</span>
+<span class="sd">        The Jacobian matrix of the system of equations.</span>
+<span class="sd">    X_eq: sympy.Matrix</span>
+<span class="sd">        The equilibrium point.</span>
+<span class="sd">    X: sympy.Symbol or iterable of sympy</span>
+<span class="sd">        The independent variables of the system of equations.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    classification: str</span>
+<span class="sd">        The classification of the equilibrium point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Substitute the equilibrium point into the Jacobian</span>
+    <span class="n">J_at_eq</span> <span class="o">=</span> <span class="n">Jacobian</span><span class="o">.</span><span class="n">subs</span><span class="p">([(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_eq</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_eq</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X_eq</span><span class="p">)])</span>
+    <span class="c1"># Evaluate symbolic Jacobian numerically</span>
+    <span class="n">J_at_eq</span> <span class="o">=</span> <span class="n">J_at_eq</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span>
+    <span class="c1"># check if there is any complex value in the Jacobian</span>
+    <span class="k">if</span> <span class="n">has_complex_elements</span><span class="p">(</span><span class="n">J_at_eq</span><span class="p">):</span>
+        <span class="n">J_at_eq_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">J_at_eq</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">J_at_eq_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">J_at_eq</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># Compute eigenvalues</span>
+    <span class="c1"># J_at_eq_np = np.array(J_at_eq).astype(np.float64)  # Convert to numpy array</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">J_at_eq_np</span><span class="p">)</span>  <span class="c1"># Compute eigenvalues</span>
+
+    <span class="c1"># Classify based on eigenvalues</span>
+    <span class="n">real_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">ev</span><span class="o">.</span><span class="n">real</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">eigenvalues</span><span class="p">]</span>
+    <span class="n">imag_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">ev</span><span class="o">.</span><span class="n">imag</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">eigenvalues</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isreal</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)):</span>  <span class="c1"># If all eigenvalues are real</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">ev</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">real_parts</span><span class="p">):</span>
+            <span class="n">stability</span> <span class="o">=</span> <span class="s2">&quot;Unstable Node&quot;</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">ev</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">real_parts</span><span class="p">):</span>
+            <span class="n">stability</span> <span class="o">=</span> <span class="s2">&quot;Stable Node&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stability</span> <span class="o">=</span> <span class="s2">&quot;Saddle Point&quot;</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Complex eigenvalues</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">ev</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">real_parts</span><span class="p">):</span>
+            <span class="n">stability</span> <span class="o">=</span> <span class="s2">&quot;Stable Spiral&quot;</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">ev</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">real_parts</span><span class="p">):</span>
+            <span class="n">stability</span> <span class="o">=</span> <span class="s2">&quot;Unstable Spiral&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stability</span> <span class="o">=</span> <span class="s2">&quot;Center (Neutral Stability)&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;eigenvalues&quot;</span><span class="p">:</span> <span class="n">eigenvalues</span><span class="p">,</span> <span class="s2">&quot;stability&quot;</span><span class="p">:</span> <span class="n">stability</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the variables (states)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x y&#39;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">])</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+
+<span class="c1"># Step 1: Find equilibrium points</span>
+<span class="n">eq_points</span> <span class="o">=</span> <span class="n">equilibrium_points</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Calculate the Jacobian matrix</span>
+<span class="n">Jacobian</span> <span class="o">=</span> <span class="n">find_jacobian</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="s2">&quot;Jacobian:&quot;</span><span class="p">,</span> <span class="n">Jacobian</span><span class="p">)</span>
+
+<span class="c1"># Step 3: Classify each equilibrium point</span>
+<span class="k">for</span> <span class="n">X_eq</span> <span class="ow">in</span> <span class="n">eq_points</span><span class="p">:</span>
+    <span class="c1"># display(Math(f&#39;x_{&quot;{eq}&quot;} = {sp.latex(X_eq)}&#39;))</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">classify_equilibrium</span><span class="p">(</span><span class="n">Jacobian</span><span class="p">,</span> <span class="n">X_eq</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">classification</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;stability&#39;</span><span class="p">]</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;eigenvalues&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Equilibrium point </span><span class="si">{</span><span class="n">X_eq</span><span class="si">}</span><span class="s2"> is classified as: </span><span class="si">{</span><span class="n">classification</span><span class="si">:</span><span class="s2">&gt;20s</span><span class="si">}</span><span class="s2">, eigenvalues: </span><span class="si">{</span><span class="n">eigenvalues</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;Jacobian:&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \left[\begin{matrix}2 x &amp; -1\\-1 &amp; 1\end{matrix}\right]$</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Equilibrium point (0, 0) is classified as:         Saddle Point, eigenvalues: [-0.61803399  1.61803399]
+Equilibrium point (1, 1) is classified as:        Unstable Node, eigenvalues: [2.61803399 0.38196601]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;A B&#39;</span><span class="p">)</span>
+
+<span class="n">L</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">A</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">B</span>
+<span class="n">g</span> <span class="o">=</span> <span class="o">-</span><span class="n">B</span> <span class="o">+</span> <span class="n">L</span> <span class="o">/</span> <span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">])</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">])</span>
+
+<span class="n">eq_points</span> <span class="o">=</span> <span class="n">equilibrium_points</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="s2">&quot;Equilibrium point:&quot;</span><span class="p">,</span> <span class="n">eq_points</span><span class="p">)</span>
+<span class="n">Jacobian</span> <span class="o">=</span> <span class="n">find_jacobian</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="s2">&quot;Jacobian:&quot;</span><span class="p">,</span> <span class="n">Jacobian</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">X_eq</span> <span class="ow">in</span> <span class="n">eq_points</span><span class="p">:</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">classify_equilibrium</span><span class="p">(</span><span class="n">Jacobian</span><span class="p">,</span> <span class="n">X_eq</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">classification</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;stability&#39;</span><span class="p">]</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;eigenvalues&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Equilibrium point: &#39;</span><span class="si">:</span><span class="s2">&lt;30s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">X_eq</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Eigenvalues: &#39;</span><span class="si">:</span><span class="s2">&lt;30s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">eigenvalues</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Classification: &#39;</span><span class="si">:</span><span class="s2">&lt;30s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">classification</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;Equilibrium point:&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \left[ \left( -5, \  - \frac{5}{2}\right), \  \left( 4, \  2\right)\right]$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;Jacobian:&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \left[\begin{matrix}-1 &amp; 2\\- \frac{10}{\left(A + 1\right)^{2}} &amp; -1\end{matrix}\right]$</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Equilibrium point:             (-5, -5/2)
+Eigenvalues:                   [-1.+1.11803399j -1.-1.11803399j]
+Classification:                Stable Spiral
+--------------------------------------------------
+Equilibrium point:             (4, 2)
+Eigenvalues:                   [-1.+0.89442719j -1.-0.89442719j]
+Classification:                Stable Spiral
+--------------------------------------------------
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="A-short-term-memory-circuit">
+<h2>A short-term memory circuit<a class="headerlink" href="#A-short-term-memory-circuit" title="Link to this heading">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\frac{dE_1}{dt} &amp;= \frac{1}{\tau} \big( -E_1 + \frac{100(3E_2)^2}{120^2 + (3E_2)^2} \big)  \\
+\frac{dE_2}{dt} &amp;= \frac{1}{\tau} \big( -E_2 + \frac{100(3E_1)^2}{120^2 + (3E_1)^2} \big)
+\end{align*}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau=20\)</span> ms.</p>
+<ul class="simple">
+<li><p>find fixed points,</p></li>
+<li><p>plot isoclines,</p></li>
+<li><p>find stability characteristics of the fixed points,</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tau</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">E1</span><span class="p">,</span> <span class="n">E2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;E1 E2&#39;</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">])</span>
+<span class="n">F1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau</span> <span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">E1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="mi">120</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">F2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">E2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="mi">120</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plot_nullclines</span><span class="p">(</span><span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;E1&#39;</span><span class="p">,</span> <span class="s1">&#39;E2&#39;</span><span class="p">],</span>
+                <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">y_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span>
+                <span class="n">num_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+<span class="n">eq_points</span> <span class="o">=</span> <span class="n">equilibrium_points</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="n">Jacobian</span> <span class="o">=</span> <span class="n">find_jacobian</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="s2">&quot;Jacobian:&quot;</span><span class="p">,</span> <span class="n">Jacobian</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">X_eq</span> <span class="ow">in</span> <span class="n">eq_points</span><span class="p">:</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">classify_equilibrium</span><span class="p">(</span><span class="n">Jacobian</span><span class="p">,</span> <span class="n">X_eq</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">classification</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;stability&#39;</span><span class="p">]</span>
+    <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;eigenvalues&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Equilibrium point: &#39;</span><span class="si">:</span><span class="s2">&lt;30s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">X_eq</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Eigenvalues: &#39;</span><span class="si">:</span><span class="s2">&lt;30s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">eigenvalues</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Classification: &#39;</span><span class="si">:</span><span class="s2">&lt;30s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">classification</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">50</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;Jacobian:&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \left[\begin{matrix}-0.05 &amp; - \frac{810.0 E_{2}^{3}}{\left(9 E_{2}^{2} + 14400\right)^{2}} + \frac{90.0 E_{2}}{9 E_{2}^{2} + 14400}\\- \frac{810.0 E_{1}^{3}}{\left(9 E_{1}^{2} + 14400\right)^{2}} + \frac{90.0 E_{1}}{9 E_{1}^{2} + 14400} &amp; -0.05\end{matrix}\right]$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Equilibrium point:             (0.0, 0.0)
+Eigenvalues:                   [-0.05 -0.05]
+Classification:                Stable Node
+--------------------------------------------------
+Equilibrium point:             (20.0000000000000, 20.0000000000000)
+Eigenvalues:                   [ 0.03 -0.13]
+Classification:                Saddle Point
+--------------------------------------------------
+Equilibrium point:             (80.0000000000000, 80.0000000000000)
+Eigenvalues:                   [-0.03 -0.07]
+Classification:                Stable Node
+--------------------------------------------------
+Equilibrium point:             (-6.89655172413793 - 13.1577820885096*I, -6.89655172413793 + 13.1577820885096*I)
+Eigenvalues:                   [ 0.0577033+0.j -0.1577033+0.j]
+Classification:                Saddle Point
+--------------------------------------------------
+Equilibrium point:             (-6.89655172413793 + 13.1577820885096*I, -6.89655172413793 - 13.1577820885096*I)
+Eigenvalues:                   [ 0.0577033+0.j -0.1577033+0.j]
+Classification:                Saddle Point
+--------------------------------------------------
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_21_3.png" src="../_images/examples_chap_06_21_3.png" />
+</div>
+</div>
+</section>
+<section id="Hysteresis,-bifurcation,-and-memory">
+<h2>Hysteresis, bifurcation, and memory<a class="headerlink" href="#Hysteresis,-bifurcation,-and-memory" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pydstool.github.io/PyDSTool/PyCont.html#head-80e716dddbabca5f9aabaacdbdefd5d2eeeb6f47">TODO!</a></p></li>
+</ul>
+</section>
+<section id="Adaptation,-forgetting,-and-catastrophe-theory">
+<h2>Adaptation, forgetting, and catastrophe theory<a class="headerlink" href="#Adaptation,-forgetting,-and-catastrophe-theory" title="Link to this heading">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\frac{dE_1}{dt} &amp;= \frac{1}{\tau} \big( -E_1 + \frac{100(3E_2)_{+}^2}{(120+A_1)^2+(3E_2)_{+}^2} \big) \\
+\frac{dE_2}{dt} &amp;= \frac{1}{\tau} \big( -E_2 + \frac{100(3E_1)_{+}^2}{(120+A_1)^2+(3E_1)_{+}^2} \big) \\
+\frac{dA_1}{dt} &amp;= \frac{1}{\tau_a} (-A_1 + 0.7 E_1) \\
+\frac{dA_2}{dt} &amp;= \frac{1}{\tau_a} (-A_2 + 0.7 E_2)
+\end{align*}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau = 20\)</span> ms, <span class="math notranslate nohighlight">\(\tau_a = 4000\)</span> ms.</p>
+<p>for plotting the isoclines, we consider the first two equations and consider <span class="math notranslate nohighlight">\(A_1\)</span> as a parameter.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><br/><span></span><span class="k">def</span> <span class="nf">adaptation_isoclines</span><span class="p">(</span><span class="n">A1</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;E1 E2&#39;</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">])</span>
+    <span class="n">F1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau</span> <span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">E1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span> <span class="p">((</span><span class="mi">120</span><span class="o">+</span><span class="n">A1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">F2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">E2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span> <span class="p">((</span><span class="mi">120</span><span class="o">+</span><span class="n">A1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">])</span>
+
+    <span class="n">plot_nullclines</span><span class="p">(</span><span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;E1&#39;</span><span class="p">,</span> <span class="s1">&#39;E2&#39;</span><span class="p">],</span>
+                    <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">y_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span>
+                    <span class="n">num_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">eq_points</span> <span class="o">=</span> <span class="n">equilibrium_points</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">eq_points</span><span class="p">)</span>
+
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">adaptation_isoclines</span><span class="p">(</span><span class="mf">24.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$A_1=24$&#39;</span><span class="p">)</span>
+<span class="n">adaptation_isoclines</span><span class="p">(</span><span class="mf">36.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$A_1=36$&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[(0.0, 0.0), (36.0000000000000, 36.0000000000000), (64.0000000000000, 64.0000000000000), (-9.3628088426528 - 18.5411985061749*I, -9.3628088426528 + 18.5411985061749*I), (-9.3628088426528 + 18.5411985061749*I, -9.3628088426528 - 18.5411985061749*I)]
+[(0.0, 0.0), (-10.6423173803526 - 21.500641960307*I, -10.6423173803526 + 21.500641960307*I), (-10.6423173803526 + 21.500641960307*I, -10.6423173803526 - 21.500641960307*I), (50.0 - 14.2828568570857*I, 50.0 - 14.2828568570857*I), (50.0 + 14.2828568570857*I, 50.0 + 14.2828568570857*I)]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_24_1.png" src="../_images/examples_chap_06_24_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">tau_a</span><span class="p">,</span> <span class="n">stm</span><span class="p">):</span>
+    <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">dE1dt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau</span> <span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">E1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E2</span><span class="o">+</span><span class="n">stm</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="o">&gt;=</span><span class="mi">200</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="o">&lt;=</span><span class="mi">400</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span> <span class="p">((</span><span class="mi">120</span><span class="o">+</span><span class="n">A1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E2</span><span class="o">+</span><span class="n">stm</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="o">&gt;=</span><span class="mi">200</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="o">&lt;=</span><span class="mi">400</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">dE2dt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">E2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span> <span class="p">((</span><span class="mi">120</span><span class="o">+</span><span class="n">A1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">E1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">dA1dt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau_a</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">A1</span> <span class="o">+</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">E1</span><span class="p">)</span>
+    <span class="n">dA2dt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">tau_a</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">A2</span> <span class="o">+</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">E2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dE1dt</span><span class="p">,</span> <span class="n">dE2dt</span><span class="p">,</span> <span class="n">dA1dt</span><span class="p">,</span> <span class="n">dA2dt</span><span class="p">])</span>
+
+<span class="n">t_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">8000</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">ode</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">t</span><span class="o">=</span><span class="n">t_range</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">values</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;E(t)&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">values</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;A(t)&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Spike Rate&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_25_0.png" src="../_images/examples_chap_06_25_0.png" />
+</div>
+</div>
+</section>
+<section id="Competition-and-neural-decisions">
+<h2>Competition and neural decisions<a class="headerlink" href="#Competition-and-neural-decisions" title="Link to this heading">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\frac{dE_1}{dt} &amp;= \frac{1}{\tau}(-E_1 + S(K_1 - 3E_2)) \\
+\frac{dE_2}{dt} &amp;= \frac{1}{\tau}(-E_2 + S(K_2 - 3E_1)) \\
+S(x) &amp;=
+\begin{cases}
+\frac{100(x)^2}{120^2+(x)^2} &amp; x \geq 0 \\
+0  &amp; x&lt;0
+\end{cases}
+\end{align*}\end{split}\]</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">neuron_system</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">K1</span><span class="p">,</span> <span class="n">K2</span><span class="p">,</span> <span class="n">Tau</span><span class="p">):</span>
+    <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span> <span class="o">=</span> <span class="n">X</span>  <span class="c1"># Unpack the state vector (E1 and E2 represent the neuron states)</span>
+
+    <span class="c1"># Post-synaptic potentials</span>
+    <span class="n">PSP1</span> <span class="o">=</span> <span class="p">(</span><span class="n">K1</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">E2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">E2</span> <span class="o">&lt;</span> <span class="n">K1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">PSP2</span> <span class="o">=</span> <span class="p">(</span><span class="n">K2</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">E1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">E1</span> <span class="o">&lt;</span> <span class="n">K2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># Define the differential equations for each neuron</span>
+    <span class="n">dE1_dt</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">E1</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">PSP1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">120</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">PSP1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">Tau</span>
+    <span class="n">dE2_dt</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">E2</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">PSP2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">120</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">PSP2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">Tau</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dE1_dt</span><span class="p">,</span> <span class="n">dE2_dt</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">plot_competition</span><span class="p">(</span><span class="n">K1</span><span class="p">,</span> <span class="n">K2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">t_range</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">5</span><span class="p">)):</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">neuron_system</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span>
+                    <span class="n">t</span><span class="o">=</span><span class="n">t_range</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">K1</span><span class="p">,</span> <span class="n">K2</span><span class="p">,</span> <span class="n">tau</span><span class="p">))</span>
+    <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$E_1(t)$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_range</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$E_2(t)$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Spike Rate&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;$K_1=$</span><span class="si">{</span><span class="n">K1</span><span class="si">}</span><span class="s1">, $K_2=$</span><span class="si">{</span><span class="n">K2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+    <span class="n">Xiso</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>  <span class="c1"># X for Isoclines</span>
+    <span class="n">Isocline1</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">K2</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">Xiso</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">120</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">K2</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">Xiso</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">Xiso</span> <span class="o">&lt;</span> <span class="n">K2</span><span class="p">)</span>
+    <span class="n">Isocline2</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">K1</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">Xiso</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">120</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">K1</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">Xiso</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">Xiso</span> <span class="o">&lt;</span> <span class="n">K1</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xiso</span><span class="p">,</span> <span class="n">Isocline1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$dE_1/dt$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Isocline2</span><span class="p">,</span> <span class="n">Xiso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$dE_2/dt$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$E_1, E_2$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;E1&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;E2&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plot_competition</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_chap_06_27_0.png" src="../_images/examples_chap_06_27_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Chapter 6</a><ul>
+<li><a class="reference internal" href="#Nonlinear-neurodynamics-and-bifurcations"><strong>Nonlinear neurodynamics and bifurcations</strong></a></li>
+<li><a class="reference internal" href="#Step-1:-Define-the-System-of-Differential-Equations">Step 1: Define the System of Differential Equations</a></li>
+<li><a class="reference internal" href="#Step-2:-Find-the-Nullclines">Step 2: Find the Nullclines</a></li>
+<li><a class="reference internal" href="#Step-3:-Use-SymPy-to-Solve-for-Nullclines">Step 3: Use SymPy to Solve for Nullclines</a></li>
+<li><a class="reference internal" href="#Step-4:-Plot-the-Nullclines-Using-Matplotlib">Step 4: Plot the Nullclines Using Matplotlib</a></li>
+<li><a class="reference internal" href="#Example">Example</a></li>
+<li><a class="reference internal" href="#Explanation">Explanation</a></li>
+<li><a class="reference internal" href="#Tools-Used">Tools Used</a><ul>
+<li><a class="reference internal" href="#adding-an-interactive-trajectory-solution">adding an interactive trajectory solution</a></li>
+<li><a class="reference internal" href="#Related-tool">Related tool</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pplane">pplane</a></li>
+<li><a class="reference internal" href="#Stabiliby-of-steady-states">Stabiliby of steady states</a><ul>
+<li><a class="reference internal" href="#Explanation:">Explanation:</a></li>
+<li><a class="reference internal" href="#Customizing-the-Code:">Customizing the Code:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#A-short-term-memory-circuit">A short-term memory circuit</a></li>
+<li><a class="reference internal" href="#Hysteresis,-bifurcation,-and-memory">Hysteresis, bifurcation, and memory</a></li>
+<li><a class="reference internal" href="#Adaptation,-forgetting,-and-catastrophe-theory">Adaptation, forgetting, and catastrophe theory</a></li>
+<li><a class="reference internal" href="#Competition-and-neural-decisions">Competition and neural decisions</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="chap_05.html"
+                          title="previous chapter">Chapter 5</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/chap_06.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chap_05.html" title="Chapter 5"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">spikes 0.1.dev1+gb1993c0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Chapter 6</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, Abolfazl Ziaeemehr.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>
